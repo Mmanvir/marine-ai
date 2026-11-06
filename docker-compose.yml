@@ -1,0 +1,51 @@
+# Full stack in containers:  node scripts/setup-env.js && docker compose up --build
+# Then open http://localhost:8080 . Seed demo accounts: docker compose exec backend npm run seed
+# Note: this file was written but not executed in the authoring environment (no Docker daemon / registry access there).
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "127.0.0.1:27017:27017"   # bound to localhost only
+
+  ml-service:
+    build: ./ml-service
+    restart: unless-stopped
+    environment:
+      ML_SERVICE_TOKEN: ${ML_SERVICE_TOKEN:?run node scripts/setup-env.js first}
+      ML_ALLOWED_ORIGINS: http://backend:4000
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    depends_on: [mongo, ml-service]
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      MONGODB_URI: mongodb://mongo:27017/marinetrace
+      JWT_SECRET: ${JWT_SECRET:?run node scripts/setup-env.js first}
+      ML_SERVICE_URL: http://ml-service:8000
+      ML_SERVICE_TOKEN: ${ML_SERVICE_TOKEN}
+      CORS_ORIGIN: http://localhost:8080
+      UPLOAD_DIR: /data/uploads
+      DEMO_DATA_DIR: /demo/synthetic
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@marinetrace.local}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-}
+      SEED_DEMO_EMAIL: ${SEED_DEMO_EMAIL:-researcher@marinetrace.local}
+      SEED_DEMO_PASSWORD: ${SEED_DEMO_PASSWORD:-}
+    volumes:
+      - uploads:/data/uploads
+      - ./data/synthetic:/demo/synthetic:ro
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    depends_on: [backend]
+    ports:
+      - "8080:80"
+
+volumes:
+  mongo-data:
+  uploads:

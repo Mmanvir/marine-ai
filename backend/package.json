@@ -1,0 +1,39 @@
+{
+  "name": "marinetrace-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MarineTrace AI - Express API (research prototype)",
+  "main": "src/server.js",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "test": "jest --runInBand",
+    "seed": "node src/scripts/seed.js",
+    "seed:reset": "node src/scripts/seed.js --reset",
+    "seed:analyze": "node src/scripts/seed.js --reset --analyze"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "csv-parse": "^5.6.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.5",
+    "morgan": "^1.10.0",
+    "multer": "^2.0.2",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "setupFiles": ["<rootDir>/tests/setup.js"]
+  }
+}

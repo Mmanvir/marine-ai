@@ -1,0 +1,58 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "ML service",
+      "type": "shell",
+      "command": "python -m uvicorn app.main:app --reload --port 8000",
+      "options": { "cwd": "${workspaceFolder}/ml-service" },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "group": "marinetrace", "panel": "dedicated" }
+    },
+    {
+      "label": "Backend API",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": { "cwd": "${workspaceFolder}/backend" },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "group": "marinetrace", "panel": "dedicated" }
+    },
+    {
+      "label": "Frontend",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": { "cwd": "${workspaceFolder}/frontend" },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "group": "marinetrace", "panel": "dedicated" }
+    },
+    {
+      "label": "Start all (ML + API + web)",
+      "dependsOn": ["ML service", "Backend API", "Frontend"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Test ML service",
+      "type": "shell",
+      "command": "python -m pytest -q",
+      "options": { "cwd": "${workspaceFolder}/ml-service" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Test backend",
+      "type": "shell",
+      "command": "npm test",
+      "options": { "cwd": "${workspaceFolder}/backend" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Test frontend",
+      "type": "shell",
+      "command": "npm test",
+      "options": { "cwd": "${workspaceFolder}/frontend" },
+      "problemMatcher": []
+    }
+  ]
+}
